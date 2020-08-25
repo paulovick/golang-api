@@ -34,8 +34,6 @@ func applyMigrations() {
 	}
 
 	logger.Info("Migrations applied successfully")
-
-	defer m.Close()
 }
 
 func Migrate() {
