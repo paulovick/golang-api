@@ -1,4 +1,4 @@
-package handlers_book
+package handlersbook
 
 import (
 	"github.com/gorilla/mux"

@@ -1,13 +1,16 @@
 package main
 
 import (
-	"api-example/api/handlers"
+	router "api-example/api"
+	"api-example/database"
+	"api-example/migrations"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func get(w http.ResponseWriter, r *http.Request) {
@@ -71,10 +74,17 @@ func getCommentFromUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	database.InitDB()
+	migrations.Migrate()
+
 	r := mux.NewRouter()
+	router.SetRoutes(r)
 
-	api := r.PathPrefix("/api/v1").Subrouter()
-	handlers_book.RegisterBook(api)
+	err := http.ListenAndServe(":8080", r)
 
-	log.Fatal(http.ListenAndServe(":8080", r))
+	database.CloseDB()
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
