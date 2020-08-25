@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:12.4-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: apiexample
+      POSTGRES_PASSWORD: apiexample
+      POSTGRES_DB: apiexample
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+
+volumes:
+  db_data:
