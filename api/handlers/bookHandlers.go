@@ -22,7 +22,8 @@ func getAllBooks(w http.ResponseWriter, r *http.Request) {
 	var bookResponses []apimodels.BookResponse
 	for i := 0; i < len(books); i++ {
 		book := books[i]
-		bookResponses = append(bookResponses, *assemblers.AssembleBookResponse(&book))
+		author := repositories.GetAuthorById(book.AuthorID)
+		bookResponses = append(bookResponses, *assemblers.AssembleBookResponse(&book, author))
 	}
 
 	responseContent, _ := json.Marshal(bookResponses)
@@ -49,7 +50,8 @@ func getBookById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	bookResponse := assemblers.AssembleBookResponse(book)
+	author := repositories.GetAuthorById(book.AuthorID)
+	bookResponse := assemblers.AssembleBookResponse(book, author)
 	responseContent, _ := json.Marshal(bookResponse)
 
 	w.Header().Set("Content-Type", "application/json")
