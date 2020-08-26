@@ -8,4 +8,5 @@ import (
 func SetRoutes(router *mux.Router) {
 	api := router.PathPrefix("/api/v1").Subrouter()
 	handlersbook.RegisterBook(api)
+	handlersbook.RegisterAuthor(api)
 }

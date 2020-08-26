@@ -12,6 +12,9 @@ var logger = customlogger.GetLogger("MIGRATIONS")
 
 func autoMigrate() {
 	Connection.AutoMigrate(&models.Book{})
+	Connection.AutoMigrate(&models.Author{})
+
+	Connection.Model(&models.Book{}).AddForeignKey("author_id", "authors(id)", "NO ACTION", "NO ACTION")
 }
 
 func applyMigrations() {
@@ -37,6 +40,6 @@ func applyMigrations() {
 }
 
 func Migrate() {
-	// autoMigrate()
-	applyMigrations()
+	autoMigrate()
+	// applyMigrations()
 }

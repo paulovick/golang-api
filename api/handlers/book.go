@@ -1,4 +1,4 @@
-package handlersbook
+package handlers
 
 import (
 	"api-example/api/models"
@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func getAll(w http.ResponseWriter, r *http.Request) {
+func getAllBooks(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	filter := repositories.BookFilter{
 		Title: query.Get("title"),
@@ -23,7 +23,7 @@ func getAll(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseContent)
 }
 
-func getById(w http.ResponseWriter, r *http.Request) {
+func getBookById(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	bookID, err := strconv.Atoi(params["bookID"])
@@ -47,7 +47,7 @@ func getById(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseContent)
 }
 
-func create(w http.ResponseWriter, r *http.Request) {
+func createBook(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 	err := json.NewDecoder(r.Body).Decode(&book)
 	if err != nil {
@@ -65,7 +65,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseContent)
 }
 
-func delete(w http.ResponseWriter, r *http.Request) {
+func deleteBook(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	bookID, err := strconv.Atoi(params["bookID"])
@@ -90,8 +90,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterBook(router *mux.Router) {
-	router.HandleFunc("/books", getAll).Methods(http.MethodGet)
-	router.HandleFunc("/books/{bookID}", getById).Methods(http.MethodGet)
-	router.HandleFunc("/books", create).Methods(http.MethodPost)
-	router.HandleFunc("/books/{bookID}", delete).Methods(http.MethodDelete)
+	router.HandleFunc("/books", getAllBooks).Methods(http.MethodGet)
+	router.HandleFunc("/books/{bookID}", getBookById).Methods(http.MethodGet)
+	router.HandleFunc("/books", createBook).Methods(http.MethodPost)
+	router.HandleFunc("/books/{bookID}", deleteBook).Methods(http.MethodDelete)
 }

@@ -15,7 +15,7 @@ func GetAllBooks(filter BookFilter) *[]models.Book {
 	connection := db.Connection
 
 	if filter.Title != "" {
-		connection = connection.Where("Title LIKE ?", "%" + filter.Title + "%")
+		connection = connection.Where("title LIKE ?", "%" + filter.Title + "%")
 	}
 
 	connection.Find(&books)
