@@ -35,3 +35,13 @@ func CreateBook(book *models.Book) *models.Book {
 	db.Connection.Create(book)
 	return book
 }
+
+func DeleteBook(ID int) *models.Book {
+	var book models.Book
+	err := db.Connection.First(&book, ID).Error
+	if err != nil {
+		return nil
+	}
+	db.Connection.Delete(&book)
+	return &book
+}

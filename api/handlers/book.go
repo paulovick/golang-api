@@ -65,8 +65,33 @@ func create(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseContent)
 }
 
+func delete(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	bookID, err := strconv.Atoi(params["bookID"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`"bookID" should be a number`))
+		return
+	}
+
+	removedBook := repositories.DeleteBook(bookID)
+
+	if removedBook == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	responseContent, _ := json.Marshal(removedBook)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(responseContent)
+}
+
 func RegisterBook(router *mux.Router) {
 	router.HandleFunc("/books", getAll).Methods(http.MethodGet)
 	router.HandleFunc("/books/{bookID}", getById).Methods(http.MethodGet)
 	router.HandleFunc("/books", create).Methods(http.MethodPost)
+	router.HandleFunc("/books/{bookID}", delete).Methods(http.MethodDelete)
 }
