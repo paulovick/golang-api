@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"api-example/api/handlers/assemblers"
+	apimodels "api-example/api/handlers/models"
 	"api-example/api/models"
 	"api-example/api/repositories"
 	"encoding/json"
@@ -15,8 +17,15 @@ func getAllBooks(w http.ResponseWriter, r *http.Request) {
 		Title: query.Get("title"),
 	}
 
-	books := repositories.GetAllBooks(filter)
-	responseContent, _ := json.Marshal(books)
+	books := *repositories.GetAllBooks(filter)
+
+	var bookResponses []apimodels.BookResponse
+	for i := 0; i < len(books); i++ {
+		book := books[i]
+		bookResponses = append(bookResponses, *assemblers.AssembleBookResponse(&book))
+	}
+
+	responseContent, _ := json.Marshal(bookResponses)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -40,7 +49,8 @@ func getBookById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseContent, _ := json.Marshal(book)
+	bookResponse := assemblers.AssembleBookResponse(book)
+	responseContent, _ := json.Marshal(bookResponse)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

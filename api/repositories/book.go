@@ -28,6 +28,7 @@ func GetBookById(ID int) *models.Book {
 	if err != nil {
 		return nil
 	}
+
 	return &book
 }
 
