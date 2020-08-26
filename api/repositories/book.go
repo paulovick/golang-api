@@ -5,9 +5,20 @@ import (
 	"api-example/db"
 )
 
-func GetAllBooks() *[]models.Book {
+type BookFilter struct {
+	Title string
+}
+
+func GetAllBooks(filter BookFilter) *[]models.Book {
 	var books []models.Book
-	db.Connection.Find(&books)
+
+	connection := db.Connection
+
+	if filter.Title != "" {
+		connection = connection.Where("Title LIKE ?", "%" + filter.Title + "%")
+	}
+
+	connection.Find(&books)
 	return &books
 }
 

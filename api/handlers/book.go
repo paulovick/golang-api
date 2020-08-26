@@ -10,7 +10,12 @@ import (
 )
 
 func getAll(w http.ResponseWriter, r *http.Request) {
-	books := repositories.GetAllBooks()
+	query := r.URL.Query()
+	filter := repositories.BookFilter{
+		Title: query.Get("title"),
+	}
+
+	books := repositories.GetAllBooks(filter)
 	responseContent, _ := json.Marshal(books)
 
 	w.Header().Set("Content-Type", "application/json")
